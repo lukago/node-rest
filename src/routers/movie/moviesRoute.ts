@@ -4,11 +4,19 @@ import * as request from 'request';
 import {IComment, IMovie, Movie} from '../../models/movie';
 import {BaseRoute} from '../baseRoute';
 import * as mongoose from 'mongoose';
+import {check, validationResult} from 'express-validator/check';
 
 export class MoviesRoute extends BaseRoute {
 
     public addMovieAction(router: Router): void {
-        router.post('/movies', (req: Request, res: Response) => {
+        router.post('/movies', [
+                check('title').exists().isString()
+            ], (req: Request, res: Response) => {
+            const errors = validationResult(req);
+            if (!validationResult(req).isEmpty()) {
+                return res.status(422).json({ errors: errors.array() });
+            }
+
             let title = req.body.title;
             let url = `http://www.omdbapi.com/?apikey=${process.env.API_KEY}&t=${title}`;
 
@@ -82,7 +90,15 @@ export class MoviesRoute extends BaseRoute {
     }
 
     public addMovieCommentAction(router: Router): void {
-        router.post('/comments', (req: Request, res: Response) => {
+        router.post('/comments', [
+            check('id').exists().isString(),
+            check('Value').exists().isString()
+        ], (req: Request, res: Response) => {
+            const errors = validationResult(req);
+            if (!validationResult(req).isEmpty()) {
+                return res.status(422).json({ errors: errors.array() });
+            }
+
             let movieId = req.body.id;
 
             Movie.findById(movieId, (err: any, mov: IMovie) => {

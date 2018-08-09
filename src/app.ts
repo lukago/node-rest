@@ -19,7 +19,7 @@ class App {
     }
 
     public database(): void {
-        mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI, { useNewUrlParser: true });
+        mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
         mongoose.connection.on('error', () => {
             console.log('MongoDB connection error. Please make sure MongoDB is running.');
             process.exit();

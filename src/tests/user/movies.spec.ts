@@ -4,12 +4,17 @@ import * as mongoose from 'mongoose';
 describe('Movies REST test', () => {
 
     const test = new BaseTest();
+
     const req = {
         title: 'crash'
     };
 
+    const badReq = {
+        titles: 'fight club'
+    };
+
     before((done) => {
-        mongoose.connect('mongodb://localhost:27017/moviedbtest', {useNewUrlParser: true});
+        mongoose.connect(process.env.MONGODBTEST_URI, {useNewUrlParser: true});
         const db = mongoose.connection;
         db.on('error', console.error.bind(console, 'connection error'));
         db.once('open', () => {
@@ -31,7 +36,7 @@ describe('Movies REST test', () => {
             });
     });
 
-    it('it should return error message', (done) => {
+    it('it should fail after adding same movie', (done) => {
         test.chai.request(test.server)
             .post(`${test.route}/movies`)
             .send(req)
@@ -41,6 +46,18 @@ describe('Movies REST test', () => {
                 res.body.should.have.property('success');
                 res.body.success.should.equal(false);
                 res.body.should.have.property('message');
+                done();
+            });
+    });
+
+    it('it should fail on incorrect payload', (done) => {
+        test.chai.request(test.server)
+            .post(`${test.route}/movies`)
+            .send(badReq)
+            .end((err, res) => {
+                res.status.should.equal(422);
+                res.body.should.be.a('object');
+                res.body.should.have.property('errors');
                 done();
             });
     });
