@@ -32,7 +32,7 @@ Docker files are included. Build with docker using
 * GET /movies - returs list of all movies
 * GET /movies/:movieId - returns movie which imdbID is equal to passed movieId param
 * GET /comments - returs list of all movies
-* GET /comments/:commentId - returns comment with given id
+* GET /comments/:movieId - returns comment for specified movie
 * POST /movies - adds new movie. Request body is:
 <code>{"title": "movie title"}</code>
 * POST /comments - adds new comment. Request body is: 
