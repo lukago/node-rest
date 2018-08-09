@@ -34,7 +34,7 @@ class Server {
     }
 
     private runServer(): void {
-        this.port = this.normalizePort(process.env.PORT || 3500);
+        this.port = this.normalizePort(process.env.PORT);
         App.set('port', this.port);
         this.createServer();
     }
