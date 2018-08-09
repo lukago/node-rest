@@ -8,7 +8,7 @@ import * as mongoose from 'mongoose';
 export class MoviesRoute extends BaseRoute {
 
     public addMovieAction(router: Router): void {
-        router.post('', (req: Request, res: Response) => {
+        router.post('/movies', (req: Request, res: Response) => {
             let title = req.body.title;
             let url = `http://www.omdbapi.com/?apikey=${process.env.API_KEY}&t=${title}`;
 
@@ -53,16 +53,29 @@ export class MoviesRoute extends BaseRoute {
     }
 
     public getMoviesAction(router: Router): void {
-        router.get('', (req: Request, res: Response) => {
+        router.get('/movies', (req: Request, res: Response) => {
             Movie.find({}, (err, movies) => {
+                if (!movies) {
+                    movies = [];
+                }
+
                 res.send(movies);
             });
         });
     }
 
     public getMovieAction(router: Router): void {
-        router.get('/:id', (req: Request, res: Response) => {
+        router.get('/movies/:id', (req: Request, res: Response) => {
             Movie.findById(req.params.id, (err, movie) => {
+                if (!movie) {
+                    res.status(404);
+                    res.json({
+                        success: false,
+                        message: 'Movie does not exist'
+                    });
+                    return false;
+                }
+
                 res.send(movie);
             });
         });
@@ -127,8 +140,17 @@ export class MoviesRoute extends BaseRoute {
     }
 
     public getCommentsForMovieAction(router: Router): void {
-        router.get('/:movieId/comments', (req: Request, res: Response) => {
+        router.get('/comments/:movieId', (req: Request, res: Response) => {
             Movie.findById(req.params.movieId, (err: any, movie: IMovie) => {
+                if (!movie) {
+                    res.status(404);
+                    res.json({
+                        success: false,
+                        message: 'Movie does not exist'
+                    });
+                    return false;
+                }
+
                 res.send(movie.Comments);
             });
         });

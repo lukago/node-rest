@@ -3,6 +3,6 @@ import {default as moviesRouter} from './movie';
 
 const api = express.Router();
 
-api.use('/movies', moviesRouter);
+api.use('', moviesRouter);
 
 export default api;
