@@ -7,7 +7,7 @@ Uses Typescript, Node.js, Express and MongoDB.
 ## Run locally
 
 Make sure you have Node.js, npm, gulp and MongoDB installed.
-Configure MongoURI and ports in .env file
+Configure MongoURI and ports in .env file.
 
 Run:
 
@@ -36,5 +36,5 @@ Docker files are included. Build with docker using
 * POST /movies - adds new movie. Request body is:
 <code>{"title": "movie title"}</code>
 * POST /comments - adds new comment. Request body is: 
-<code>{"Value: "example comment"}</code>
+<code>{"id": "movie imdbID", "Value": "example comment"}</code>
 
