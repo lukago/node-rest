@@ -10,6 +10,9 @@ services:
       - mongo
     depends_on:
       - mongo
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/moviedb
+      - MONGODBTEST_URI=mongodb://mongo:27017/moviedbtest
   mongo:
     container_name: mongo
     image: mongo
