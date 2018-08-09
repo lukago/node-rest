@@ -12,6 +12,7 @@ export class MoviesRoute extends BaseRoute {
         router.post('/movies', [
                 check('title').exists().isString()
             ], (req: Request, res: Response) => {
+
             const errors = validationResult(req);
             if (!validationResult(req).isEmpty()) {
                 return res.status(422).json({ errors: errors.array() });
@@ -26,34 +27,19 @@ export class MoviesRoute extends BaseRoute {
                 Movie.findById(movie.imdbID, (err, mov) => {
                     if (err) {
                         this.logger.error(err.toString());
-                        res.status(500);
-                        res.json({
-                            success: false,
-                            message: 'something went wrong.'
-                        });
+                        this.setResponse(res, 'something went wrong.', 500);
                     } else if (!mov) {
                         Movie.addMovie(movie, (err, movie) => {
                             if (err) {
                                 this.logger.error(err.toString());
-                                res.status(500);
-                                res.json({
-                                    success: false,
-                                    message: 'something went wrong.'
-                                });
+                                this.setResponse(res, 'something went wrong.', 500);
                             } else {
                                 this.logger.info('Movie added.');
-                                res.json({
-                                    success: true,
-                                    message: 'movie added succesfully.'
-                                });
+                                this.setResponse(res, 'movie added succesfully.');
                             }
                         });
                     } else {
-                        res.status(400);
-                        res.json({
-                            success: false,
-                            message: 'this movie has already been added.'
-                        });
+                        this.setResponse(res, 'this movie has already been added.', 400);
                     }
                 });
             });
@@ -76,11 +62,7 @@ export class MoviesRoute extends BaseRoute {
         router.get('/movies/:id', (req: Request, res: Response) => {
             Movie.findById(req.params.id, (err, movie) => {
                 if (!movie) {
-                    res.status(404);
-                    res.json({
-                        success: false,
-                        message: 'Movie does not exist'
-                    });
+                    this.setResponse(res, 'movie does not exist', 404);
                     return false;
                 }
 
@@ -94,6 +76,7 @@ export class MoviesRoute extends BaseRoute {
             check('id').exists().isString(),
             check('Value').exists().isString()
         ], (req: Request, res: Response) => {
+
             const errors = validationResult(req);
             if (!validationResult(req).isEmpty()) {
                 return res.status(422).json({ errors: errors.array() });
@@ -104,11 +87,7 @@ export class MoviesRoute extends BaseRoute {
             Movie.findById(movieId, (err: any, mov: IMovie) => {
                 if (err) {
                     this.logger.error(err.toString());
-                    res.status(500);
-                    res.json({
-                        success: false,
-                        message: 'something went wrong.'
-                    });
+                    this.setResponse(res, 'something went wrong.', 500);
                 } else if (mov) {
                     let comment: IComment = {
                         id: mongoose.Types.ObjectId().toHexString(),
@@ -120,11 +99,7 @@ export class MoviesRoute extends BaseRoute {
                     mov.save((err, movie) => {
                         if (err) {
                             this.logger.error(err.toString());
-                            res.status(500);
-                            res.json({
-                                success: false,
-                                message: 'something went wrong.'
-                            });
+                            this.setResponse(res, 'something went wrong.', 500);
                         } else {
                             this.logger.info('Comment added.');
                             res.json({
@@ -135,11 +110,7 @@ export class MoviesRoute extends BaseRoute {
                         }
                     });
                 } else {
-                    res.status(400);
-                    res.json({
-                        success: false,
-                        message: 'movie does not exist.'
-                    });
+                    this.setResponse(res, 'movie does not exist', 404);
                 }
             });
         });
@@ -159,16 +130,22 @@ export class MoviesRoute extends BaseRoute {
         router.get('/comments/:movieId', (req: Request, res: Response) => {
             Movie.findById(req.params.movieId, (err: any, movie: IMovie) => {
                 if (!movie) {
-                    res.status(404);
-                    res.json({
-                        success: false,
-                        message: 'Movie does not exist'
-                    });
+                    this.setResponse(res, 'movie does not exist', 404);
                     return false;
                 }
 
                 res.send(movie.Comments);
             });
+        });
+    }
+
+    private setResponse(res: Response, message: string, code: number = 200): void {
+        if (code !== 200) {
+            res.status(code);
+        }
+        res.json({
+            success: code === 200,
+            message: message
         });
     }
 }

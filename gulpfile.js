@@ -18,4 +18,4 @@ gulp.task('scripts', () => {
     return tsResult.js.pipe(gulp.dest(BUILD_DIRECTORY));
 });
 
-gulp.task('build', ['scripts']);
+gulp.task('build', ['clean-scripts', 'scripts']);
