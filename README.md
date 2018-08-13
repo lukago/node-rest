@@ -32,6 +32,8 @@ Docker files are included. Build with docker using
 
 ## API
 
+Api is under {host-url}/v1/*. Example request path: localhost:8080/v1/movies
+
 * GET /movies - returs list of all movies
 * GET /movies/:movieId - returns movie which imdbID is equal to passed movieId param
 * GET /comments - returs list of all movies
