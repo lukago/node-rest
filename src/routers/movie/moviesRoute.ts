@@ -27,19 +27,19 @@ export class MoviesRoute extends BaseRoute {
                 Movie.findById(movie.imdbID, (err, mov) => {
                     if (err) {
                         this.logger.error(err.toString());
-                        this.setResponse(res, 'something went wrong.', 500);
+                        this.setResponse(res, 'something went wrong', 500);
                     } else if (!mov) {
                         Movie.addMovie(movie, (err, movie) => {
                             if (err) {
                                 this.logger.error(err.toString());
-                                this.setResponse(res, 'something went wrong.', 500);
+                                this.setResponse(res, 'something went wrong', 500);
                             } else {
-                                this.logger.info('Movie added.');
-                                this.setResponse(res, 'movie added succesfully.');
+                                this.logger.info('movie added');
+                                this.setResponse(res, 'movie added succesfully');
                             }
                         });
                     } else {
-                        this.setResponse(res, 'this movie has already been added.', 400);
+                        this.setResponse(res, 'this movie has already been added', 400);
                     }
                 });
             });
@@ -74,7 +74,7 @@ export class MoviesRoute extends BaseRoute {
     public addMovieCommentAction(router: Router): void {
         router.post('/comments', [
             check('id').exists().isString(),
-            check('Value').exists().isString()
+            check('value').exists().isString()
         ], (req: Request, res: Response) => {
 
             const errors = validationResult(req);
@@ -87,11 +87,11 @@ export class MoviesRoute extends BaseRoute {
             Movie.findById(movieId, (err: any, mov: IMovie) => {
                 if (err) {
                     this.logger.error(err.toString());
-                    this.setResponse(res, 'something went wrong.', 500);
+                    this.setResponse(res, 'something went wrong', 500);
                 } else if (mov) {
                     let comment: IComment = {
                         id: mongoose.Types.ObjectId().toHexString(),
-                        Value: req.body.Value
+                        Value: req.body.value
                     };
 
                     mov.Comments.push(comment);
@@ -99,12 +99,12 @@ export class MoviesRoute extends BaseRoute {
                     mov.save((err, movie) => {
                         if (err) {
                             this.logger.error(err.toString());
-                            this.setResponse(res, 'something went wrong.', 500);
+                            this.setResponse(res, 'something went wrong', 500);
                         } else {
-                            this.logger.info('Comment added.');
+                            this.logger.info('comment added.');
                             res.json({
                                 success: true,
-                                message: 'movie comment added succesfully.',
+                                message: 'movie comment added succesfully',
                                 comment: comment
                             });
                         }

@@ -36,5 +36,5 @@ Docker files are included. Build with docker using
 * POST /movies - adds new movie. Request body is:
 <code>{"title": "movie title"}</code>
 * POST /comments - adds new comment. Request body is: 
-<code>{"id": "movie imdbID", "Value": "example comment"}</code>
+<code>{"id": "movie imdbID", "value": "example comment"}</code>
 
