@@ -4,6 +4,9 @@
 
 Uses Typescript, Node.js, Express and MongoDB.
 
+## Run deployed app
+Latest deploy: [polar-lake-43622.herokuapp.com](https://polar-lake-43622.herokuapp.com)
+
 ## Run locally
 
 Make sure you have Node.js, npm, gulp and MongoDB installed.
